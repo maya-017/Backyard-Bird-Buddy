@@ -1,14 +1,15 @@
-import tkinter as tk
-from tkinter import messagebox
-from PIL import Image, ImageTk
-import winsound
-import os
+import tkinter as tk #GUI toolkit
+from tkinter import messagebox #Popup
+from PIL import Image, ImageTk #Images
+import winsound #Audio
+import os #Handles the file path
 
+#Where the file folder lives, as well as the photos and sounds folders.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PHOTOS_DIR = os.path.join(BASE_DIR, "Photos")
 SOUNDS_DIR = os.path.join(BASE_DIR, "Sounds")
 
-
+#Photos, Sound, and description of each bird
 birds = [
     {
         "name": "Northern Cardinal",
@@ -65,7 +66,7 @@ birds = [
         "description": "The Carolina Chickadee is a tiny, active songbird found year‑round in the southeastern United States, especially in forests, wooded neighborhoods, and parks. It eats seeds, berries, and insects, often hanging upside‑down while foraging in trees. These birds travel in small flocks, frequently visiting feeders and calling with their familiar chick‑a‑dee‑dee notes. They nest in cavities and stay in the same area all year, making them a common backyard companion"
     }
 ]
-
+#Resizes all images to the same size 
 def load_image(path, size=(150, 150)):
     try:
         img = Image.open(path)
@@ -73,20 +74,20 @@ def load_image(path, size=(150, 150)):
         return ImageTk.PhotoImage(img)
     except:
         return None
-
+#Sound file
 def play_sound(sound_path):
     try:
         winsound.PlaySound(sound_path, winsound.SND_FILENAME)
     except:
         messagebox.showerror("Error", "Sound file not found.")
-
+#Opens a new window with selected bird profile
 def open_profile(bird):
     profile = tk.Toplevel()
     profile.title(bird["name"])
 
-    img = load_image(bird["image"], size=(250, 250))
+    img = load_image(bird["image"], size=(250, 250)) #Load large image
 
-    img_label = tk.Label(profile, image=img)
+    img_label = tk.Label(profile, image=img) #Display image
     img_label.image = img
     img_label.pack(pady=10)
 
@@ -102,10 +103,10 @@ def open_profile(bird):
 
     close_btn = tk.Button(profile, text="Close", command=profile.destroy)
     close_btn.pack(pady=5)
-
+#Text input box for search
 def validate_input(text):
     return text.strip() != "" and text.replace(" ", "").isalpha()
-
+#Searchs for bird
 def search_bird():
     user_input = entry.get()
 
@@ -126,14 +127,14 @@ def search_bird():
         "No matching bird was found.\nRefine your search and try again."
     )
 
+#Main Window
 
-
-root = tk.Tk()
-root.title("Backyard Bird Buddy")
+root = tk.Tk() #Main window
+root.title("Backyard Bird Buddy") # App name
 
 title_label = tk.Label(root, text="Backyard Bird Buddy", font=("Arial", 22))
 title_label.grid(row=0, column=0, columnspan=3, pady=10)
-
+#Puts each bird profile into a grid
 for index, bird in enumerate(birds):
     row = (index // 3) + 1
     col = index % 3
@@ -151,6 +152,7 @@ for index, bird in enumerate(birds):
     label = tk.Label(frame, text=bird["name"])
     label.pack()
 
+#Search bar and button
 entry = tk.Entry(root)
 entry.grid(row=5, column=0, pady=10)
 
